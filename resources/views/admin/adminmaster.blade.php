@@ -3,15 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 3 | Blank Page</title>
-  <!-- Tell the browser to be responsive to screen width -->
+  <title>SuperBlog | Page</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- Styles -->
 <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+<meta name="csrf-token" content="{{ csrf_token() }}">
  </head>
-<body class="hold-transition sidebar-mini">
+<body class="hold-transition sidebar-mini" >
 <!-- Site wrapper -->
-<div class="wrapper">
+<div class="wrapper" id="app">
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
@@ -67,7 +66,7 @@
           <a href="#" class="dropdown-item">
             <!-- Message Start -->
             <div class="media">
-              <img src="../../dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+              <img src="{{asset('assets/admin/default/admin.png')}}" alt="User Avatar" class="img-size-50 img-circle mr-3">
               <div class="media-body">
                 <h3 class="dropdown-item-title">
                   John Pierce
@@ -83,7 +82,7 @@
           <a href="#" class="dropdown-item">
             <!-- Message Start -->
             <div class="media">
-              <img src="../../dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+              <img src=".{{asset('assets/admin/default/admin.png')}}" alt="User Avatar" class="img-size-50 img-circle mr-3">
               <div class="media-body">
                 <h3 class="dropdown-item-title">
                   Nora Silvester
@@ -162,22 +161,30 @@
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <li class="nav-item has-treeview">
-            <a href="#" class="nav-link">
+            <router-link to="home" class="nav-link">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Dashboard
                 <i class="right fas fa-angle-left"></i>
               </p>
-            </a>
+            </router-link>
           </li>
           <li class="nav-item">
-            <a href="../widgets.html" class="nav-link">
+            <router-link to="category" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>
-                Widgets
+                Category
+              </p>
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link to="post" class="nav-link">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                Post
                 <!-- <span class="right badge badge-danger">New</span> -->
               </p>
-            </a>
+            </router-link>
           </li>
         </ul>
       </nav>
@@ -207,8 +214,7 @@
 
     <!-- Main content -->
     <section class="content">
-
-
+      <admin-main></admin-main>
     </section>
     <!-- /.content -->
   </div>
