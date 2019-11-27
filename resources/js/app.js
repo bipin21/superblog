@@ -36,6 +36,8 @@ const Toast = Swal.mixin({
   }
 })
 window.Toast = Toast
+// moments
+import {filter} from './filter'
 
 // vue router
 import VueRouter from 'vue-router'

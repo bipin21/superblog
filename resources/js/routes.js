@@ -1,7 +1,7 @@
 import AdminHome from './components/admin/AdminHomeComponent.vue'
 import CategoryList from './components/admin/category/List.vue'
 import AddCategory from './components/admin/category/New.vue'
-// import EditCategory from './components/admin/category/Edit.vue'
+import EditCategory from './components/admin/category/Edit.vue'
 
 // // FrontEnd Component
 // import PublicHome from './components/public/PublicHome.vue'
@@ -25,10 +25,10 @@ export const routes = [
         path:'/add-category',
         component:AddCategory
     },
-    // {
-    //     path:'/edit-category/:categoryid',
-    //     component:EditCategory
-    // },
+    {
+        path:'/edit-category/:categoryid',
+        component:EditCategory
+    },
     // // Post
     // {
     //     path:'/post-list',
