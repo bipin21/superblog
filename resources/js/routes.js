@@ -9,9 +9,9 @@ import EditCategory from './components/admin/category/Edit.vue'
 // import SinglePost from './components/public/blog/SingleBlog.vue'
 
 // // Post
-// import PostList from './components/admin/post/List.vue'
-// import AddPost from './components/admin/post/New.vue'
-// import EditPost from './components/admin/post/Edit.vue'
+import PostList from './components/admin/post/List.vue'
+import AddPost from './components/admin/post/New.vue'
+import EditPost from './components/admin/post/Edit.vue'
 export const routes = [
     {
         path:'/home',
@@ -29,19 +29,19 @@ export const routes = [
         path:'/edit-category/:categoryid',
         component:EditCategory
     },
-    // // Post
-    // {
-    //     path:'/post-list',
-    //     component:PostList
-    // },
-    // {
-    //     path:'/add-post',
-    //     component:AddPost
-    // },
-    // {
-    //     path:'/edit-post/:postid',
-    //     component:EditPost
-    // },
+    // Post
+    {
+        path:'/post-list',
+        component:PostList
+    },
+    {
+        path:'/add-post',
+        component:AddPost
+    },
+    {
+        path:'/edit-post/:postid',
+        component:EditPost
+    },
 
     // // Frontend Route
     // {

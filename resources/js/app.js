@@ -7,6 +7,10 @@
 require('./bootstrap');
 import Vue from 'vue';
 window.Vue = require('vue');
+//markdown editor
+import 'v-markdown-editor/dist/index.css';
+import Editor from 'v-markdown-editor'
+Vue.use(Editor);
 //vuex
 import Vuex from 'vuex'
 Vue.use(Vuex)
@@ -14,6 +18,7 @@ import storeData from "./store/index"
 const store =new Vuex.Store(
     storeData
 )
+
 // vform
 import { Form, HasError, AlertError } from 'vform'
 window.Form = Form;

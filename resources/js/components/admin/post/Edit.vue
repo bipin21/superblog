@@ -5,12 +5,12 @@
         <div class="col-md-6">
           <div class="card card-primary">
             <div class="card-header">
-              <h3 class="card-title">Add Category</h3>
+              <h3 class="card-title">Update Category</h3>
             </div>
-            <form role="form" @submit.prevent="addCategory()">
+            <form role="form" @submit.prevent="updateCategory()">
               <div class="card-body">
                 <div class="form-group">
-                  <label for="categoryId">Add New Category</label>
+                  <label for="categoryId">Edit Category</label>
                   <input
                     type="text"
                     class="form-control"
@@ -25,7 +25,7 @@
               </div>
 
               <div class="card-footer">
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" class="btn btn-primary">Update</button>
               </div>
             </form>
           </div>
@@ -36,7 +36,13 @@
 </template>
 <script>
 export default {
-  name: "New",
+  name: "Edit",
+  mounted(){
+      axios.get(`/editcategory/${this.$route.params.categoryid}`)
+      .then((response) => {
+          this.form.fill(response.data.category)
+      })
+  },
   data() {
     return {
       form: new Form({
@@ -45,14 +51,13 @@ export default {
     };
   },
   methods: {
-    addCategory() {
-      this.form
-        .post("/add-category")
+    updateCategory() {
+      this.form.post(`/update-category/${this.$route.params.categoryid}`)
         .then(response => {
           this.$router.push("/category-list");
           Toast.fire({
             icon: "success",
-            title: "Category added successfully"
+            title: "Category updated successfully"
           });
         })
         .catch(() => {});
