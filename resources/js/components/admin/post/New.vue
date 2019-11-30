@@ -24,10 +24,7 @@
                 </div>
                 <div class="form-group">
                   <label for="descriptionId">Description</label>
-                  <markdown-editor
-                    v-model="form.description"
-                   
-                  ></markdown-editor>
+                  <markdown-editor v-model="form.description"></markdown-editor>
                   <has-error :form="form" field="description"></has-error>
                 </div>
                 <div class="form-group">
@@ -42,7 +39,7 @@
                       :value="category.id"
                       v-for="category in getallCategory"
                       :key="category.id"
-                    >option {{category.cat_name}}</option>
+                    > {{category.cat_name}}</option>
                   </select>
                   <has-error :form="form" field="cat_id"></has-error>
                 </div>
@@ -53,11 +50,11 @@
                     @change="changePhoto($event)"
                     id="photoId"
                     name="photo"
-                     class="form-control"
+                    class="form-control"
                     :class="{ 'is-invalid': form.errors.has('photo') }"
                   />
-                  <br/>
-                  <img :src="form.photo" alt="" width="150" height="150" />
+                  <br />
+                  <img :src="form.photo" alt width="150" height="150" />
                   <has-error :form="form" field="photo"></has-error>
                 </div>
               </div>
@@ -108,11 +105,21 @@ export default {
     },
     changePhoto(event) {
       var file = event.target.files[0];
-      var reader = new FileReader();
-      reader.onload = event => {
-        this.form.photo = event.target.result
-      };
-      reader.readAsDataURL(file);
+      console.log(file.size);
+      if (file.size > 1048756) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong!",
+          footer: "<a href>Why do I have this issue?</a>"
+        });
+      } else {
+        let reader = new FileReader();
+        reader.onload = event => {
+          this.form.photo = event.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
     }
   }
 };

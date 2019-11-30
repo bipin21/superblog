@@ -36,10 +36,12 @@
                     <td v-else>--</td>
                     <td>{{post.title | sortlength(20,"---")}}</td>
                     <td>{{post.description | sortlength(40,"...")}}</td>
-                    <td><img :src="post.photo" alt="" width="80" height="80"/></td>
+                    <td>
+                      <img :src="'../../uploadImage/'+post.photo" alt width="80" height="80" />
+                    </td>
                     <td>{{post.created_at | timeformat}}</td>
                     <td>
-                    <router-link :to="`/edit-post/${post.id}`">Edit</router-link>
+                      <router-link :to="`/edit-post/${post.id}`">Edit</router-link>
                       <a href @click.prevent="deletePost(post.id)">Delete</a>
                     </td>
                   </tr>
@@ -69,21 +71,24 @@ export default {
   },
   computed: {
     getallPost() {
-      return this.$store.getters.getAllPost
+      return this.$store.getters.getAllPost;
     }
   },
   methods: {
+    ourImage(img) {
+      return "/uploadimage/" + img;
+    },
     deletePost(id) {
       axios
-        .get("/post/" + id)
+        .get("/delete/" + id)
         .then(response => {
           this.$store.dispatch("getAllPost");
           Toast.fire({
             icon: "success",
             title: "Post Deleted successfully"
-          })
+          });
         })
-        .catch(() => {})
+        .catch(() => {});
     }
   }
 };
