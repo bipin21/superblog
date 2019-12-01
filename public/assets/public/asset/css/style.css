@@ -1754,6 +1754,7 @@ ul.folio-detail li label {
 
 .widget ul.recent li {
   margin-bottom: 20px;
+  height: 125px;
 }
 
 ul.recent li h6 {

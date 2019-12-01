@@ -5,6 +5,7 @@ export default {
         blogpost:[],
         singlepost:[],
         allcategories:[],
+        latestpost:[]
         
     },
     getters: {
@@ -23,6 +24,9 @@ export default {
         allcategories(state){
             return state.allcategories
         },
+        latestpost(state){
+            return state.latestpost
+        }
     },
     actions: {
         allCategory(context){
@@ -40,7 +44,7 @@ export default {
         getblogPost(context){
             axios.get('/blogpost')
                 .then((response)=>{
-                    context.commit('getblogpost',response.data.blogpost)
+                    context.commit('getblogpost',response.data.posts)
                 })
         },
         getPostById(context,payload){
@@ -54,6 +58,27 @@ export default {
                 .then((response)=>{
                     context.commit('allcategories',response.data.categories)
                 })
+        },
+        getPostByCatId(context,payload){
+            axios.get('/categorypost/'+payload)
+                .then((response)=>{
+                    console.log(response.data.posts)
+                    context.commit('getPostByCatId',response.data.posts)
+                })
+        },
+        latestPost(context){
+            axios.get('/latestpost')
+                .then((response)=>{
+                    // console.log(response.data)
+                    context.commit('latestpost',response.data.posts)
+                })
+        },
+        SearchPost(context,payload){
+            axios.get('/search?s='+payload)
+                .then((response)=>{
+                    context.commit('getSearchPost',response.data.posts)
+                })
+
         },
     },
     mutations: {
@@ -69,8 +94,17 @@ export default {
         singlepost(state,payload){
             return state.singlepost = payload
         },
-        allcategories(state,data){
-            return state.allcategories = data
+        allcategories(state,payload){
+            return state.allcategories = payload
         },
+        getPostByCatId(state,payload){
+            state.blogpost = payload
+        },
+        getSearchPost(state,payload){
+            state.blogpost = payload
+        },
+        latestpost(state,payload){
+            state.latestpost = payload
+        }
     }
 }

@@ -4,8 +4,8 @@
       <aside class="right-sidebar">
         <div class="widget">
           <form class="form-search">
-            <input placeholder="Type something" type="text" class="input-medium search-query" />
-            <button type="submit" class="btn btn-square btn-theme">Search</button>
+            <input placeholder="Type something" @keyup="RealSearch" v-model="keyword" type="text" class="input-medium search-query" />
+            <button type="submit" class="btn btn-square btn-theme" @click.prevent="RealSearch">Search</button>
           </form>
         </div>
         <div class="widget">
@@ -13,7 +13,7 @@
           <ul class="cat">
             <li v-for="category in allcategories" v-bind:key="category.id">
               <i class="icon-angle-right"></i>
-              <router-link :to="`categories/${category.id}`">{{category.cat_name}}</router-link>
+              <router-link :to="`/categories/${category.id}`">{{category.cat_name}}</router-link>
               <span>(20)</span>
             </li>
           </ul>
@@ -21,14 +21,14 @@
         <div class="widget">
           <h5 class="widgetheading">Latest posts</h5>
           <ul class="recent">
-            <li v-for="(post,index) in blogpost" v-bind:key="index" v-if="index<5">
+            <li v-for="(post,index) in blogpost" v-bind:key="index" >
               <img
                       :src="`uploadImage/${post.photo}`"
                       class="pull-left"
-                      alt="" width="80"
+                      alt="" width="100" height="100"
               />
               <h6>
-                <a href="#">{{post.title}}</a>
+                <router-link :to="`/blog/${post.id}`">{{post.title}}</router-link>
               </h6>
               <p>{{post.description | sortlength(100,"...")}}</p>
             </li>
@@ -62,6 +62,7 @@
   </span>
 </template>
 <script>
+import _ from 'lodash';
 export default {
   name: "BlogSidebar",
   components: {
@@ -74,17 +75,21 @@ export default {
   },
   computed: {
     blogpost() {
-      return this.$store.getters.getblogPost;
+      return this.$store.getters.latestPost;
     },
     allcategories() {
       return this.$store.getters.allcategories;
     }
   },
   mounted() {
-    this.$store.dispatch("getblogPost");
+    this.$store.dispatch("latestPost");
     this.$store.dispatch("allcategories");
   },
-  methods: {}
+  methods: {
+      RealSearch:_.debounce(function(){
+          this.$store.dispatch('SearchPost',this.keyword);
+      },1000)
+  }
 };
 </script>
 <style scoped>

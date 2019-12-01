@@ -30,20 +30,18 @@
       <div class="container">
         <div class="row">
           <div class="span8">
-            <article v-for="post in blogpost" v-bind:key="post.id" >
+            <article v-for="post in blogpost" v-bind:key="post.id">
               <div class="row">
                 <div class="span8">
                   <div class="post-video">
                     <div class="post-heading">
                       <h3>
-                        <a href="#">{{post.title}}</a>
+                        <router-link :to="`/blog/${post.id}`">{{post.title}}</router-link>
                       </h3>
                     </div>
-                    <img :src="`uploadImage/${post.photo}`" alt="" width="600" />
+                    <img :src="`uploadImage/${post.photo}`" alt width="600" />
                   </div>
-                  <p>
-                    {{post.description | sortlength(100,"...")}}
-                  </p>
+                  <p>{{post.description | sortlength(100,"...")}}</p>
                   <div class="bottom-article">
                     <ul class="meta-post">
                       <li>
@@ -63,7 +61,7 @@
                         <a href="#">4 Comments</a>
                       </li>
                     </ul>
-                    <router-link :to="`blog/${post.id}`" class="pull-right">
+                    <router-link :to="`/blog/${post.id}`" class="pull-right">
                       Continue reading
                       <i class="icon-angle-right"></i>
                     </router-link>
@@ -91,20 +89,28 @@ export default {
   components: {
     BlogSidebar
   },
-  data() {
-    return {
-      id: ""
-    };
-  },
   mounted() {
-      this.$store.dispatch('getblogPost');
+    this.$store.dispatch("getblogPost");
   },
   computed: {
     blogpost() {
       return this.$store.getters.getblogPost;
     }
   },
-  methods: {}
+  methods: {
+    getAllCategoryPost() {
+      if (this.$route.params.id != null) {
+        this.$store.dispatch("getPostByCatId", this.$route.params.id);
+      } else {
+        this.$store.dispatch("getblogPost");
+      }
+    }
+  },
+  watch: {
+    $route(to, from) {
+      this.getAllCategoryPost();
+    }
+  }
 };
 </script>
 <style scoped>

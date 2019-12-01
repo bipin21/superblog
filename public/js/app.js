@@ -2621,28 +2621,34 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "BlogPost",
   components: {
     BlogSidebar: _BlogSidebar_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  data: function data() {
-    return {
-      id: ""
-    };
-  },
   mounted: function mounted() {
-    this.$store.dispatch('getblogPost');
+    this.$store.dispatch("getblogPost");
   },
   computed: {
     blogpost: function blogpost() {
       return this.$store.getters.getblogPost;
     }
   },
-  methods: {}
+  methods: {
+    getAllCategoryPost: function getAllCategoryPost() {
+      if (this.$route.params.id != null) {
+        this.$store.dispatch("getPostByCatId", this.$route.params.id);
+      } else {
+        this.$store.dispatch("getblogPost");
+      }
+    }
+  },
+  watch: {
+    $route: function $route(to, from) {
+      this.getAllCategoryPost();
+    }
+  }
 });
 
 /***/ }),
@@ -2656,6 +2662,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -2719,6 +2727,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "BlogSidebar",
   components: {},
@@ -2729,17 +2738,21 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     blogpost: function blogpost() {
-      return this.$store.getters.getblogPost;
+      return this.$store.getters.latestPost;
     },
     allcategories: function allcategories() {
       return this.$store.getters.allcategories;
     }
   },
   mounted: function mounted() {
-    this.$store.dispatch("getblogPost");
+    this.$store.dispatch("latestPost");
     this.$store.dispatch("allcategories");
   },
-  methods: {}
+  methods: {
+    RealSearch: lodash__WEBPACK_IMPORTED_MODULE_0___default.a.debounce(function () {
+      this.$store.dispatch('SearchPost', this.keyword);
+    }, 1000)
+  }
 });
 
 /***/ }),
@@ -75480,11 +75493,17 @@ var render = function() {
                       _c("div", { staticClass: "span8" }, [
                         _c("div", { staticClass: "post-video" }, [
                           _c("div", { staticClass: "post-heading" }, [
-                            _c("h3", [
-                              _c("a", { attrs: { href: "#" } }, [
-                                _vm._v(_vm._s(post.title))
-                              ])
-                            ])
+                            _c(
+                              "h3",
+                              [
+                                _c(
+                                  "router-link",
+                                  { attrs: { to: "/blog/" + post.id } },
+                                  [_vm._v(_vm._s(post.title))]
+                                )
+                              ],
+                              1
+                            )
                           ]),
                           _vm._v(" "),
                           _c("img", {
@@ -75498,15 +75517,9 @@ var render = function() {
                         _vm._v(" "),
                         _c("p", [
                           _vm._v(
-                            "\n                  " +
-                              _vm._s(
-                                _vm._f("sortlength")(
-                                  post.description,
-                                  100,
-                                  "..."
-                                )
-                              ) +
-                              "\n                "
+                            _vm._s(
+                              _vm._f("sortlength")(post.description, 100, "...")
+                            )
                           )
                         ]),
                         _vm._v(" "),
@@ -75556,7 +75569,7 @@ var render = function() {
                               "router-link",
                               {
                                 staticClass: "pull-right",
-                                attrs: { to: "blog/" + post.id }
+                                attrs: { to: "/blog/" + post.id }
                               },
                               [
                                 _vm._v(
@@ -75674,7 +75687,47 @@ var render = function() {
   return _c("span", { attrs: { id: "sidebar" } }, [
     _c("div", { staticClass: "span4" }, [
       _c("aside", { staticClass: "right-sidebar" }, [
-        _vm._m(0),
+        _c("div", { staticClass: "widget" }, [
+          _c("form", { staticClass: "form-search" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.keyword,
+                  expression: "keyword"
+                }
+              ],
+              staticClass: "input-medium search-query",
+              attrs: { placeholder: "Type something", type: "text" },
+              domProps: { value: _vm.keyword },
+              on: {
+                keyup: _vm.RealSearch,
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.keyword = $event.target.value
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-square btn-theme",
+                attrs: { type: "submit" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.RealSearch($event)
+                  }
+                }
+              },
+              [_vm._v("Search")]
+            )
+          ])
+        ]),
         _vm._v(" "),
         _c("div", { staticClass: "widget" }, [
           _c("h5", { staticClass: "widgetheading" }, [_vm._v("Categories")]),
@@ -75691,7 +75744,7 @@ var render = function() {
                   _vm._v(" "),
                   _c(
                     "router-link",
-                    { attrs: { to: "categories/" + category.id } },
+                    { attrs: { to: "/categories/" + category.id } },
                     [_vm._v(_vm._s(category.cat_name))]
                   ),
                   _vm._v(" "),
@@ -75711,65 +75764,44 @@ var render = function() {
             "ul",
             { staticClass: "recent" },
             _vm._l(_vm.blogpost, function(post, index) {
-              return index < 5
-                ? _c("li", { key: index }, [
-                    _c("img", {
-                      staticClass: "pull-left",
-                      attrs: {
-                        src: "uploadImage/" + post.photo,
-                        alt: "",
-                        width: "80"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("h6", [
-                      _c("a", { attrs: { href: "#" } }, [
-                        _vm._v(_vm._s(post.title))
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("p", [
-                      _vm._v(
-                        _vm._s(
-                          _vm._f("sortlength")(post.description, 100, "...")
-                        )
-                      )
+              return _c("li", { key: index }, [
+                _c("img", {
+                  staticClass: "pull-left",
+                  attrs: {
+                    src: "uploadImage/" + post.photo,
+                    alt: "",
+                    width: "100",
+                    height: "100"
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "h6",
+                  [
+                    _c("router-link", { attrs: { to: "/blog/" + post.id } }, [
+                      _vm._v(_vm._s(post.title))
                     ])
-                  ])
-                : _vm._e()
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c("p", [
+                  _vm._v(
+                    _vm._s(_vm._f("sortlength")(post.description, 100, "..."))
+                  )
+                ])
+              ])
             }),
             0
           )
         ]),
         _vm._v(" "),
-        _vm._m(1)
+        _vm._m(0)
       ])
     ])
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "widget" }, [
-      _c("form", { staticClass: "form-search" }, [
-        _c("input", {
-          staticClass: "input-medium search-query",
-          attrs: { placeholder: "Type something", type: "text" }
-        }),
-        _vm._v(" "),
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-square btn-theme",
-            attrs: { type: "submit" }
-          },
-          [_vm._v("Search")]
-        )
-      ])
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -93326,7 +93358,8 @@ __webpack_require__.r(__webpack_exports__);
     post: [],
     blogpost: [],
     singlepost: [],
-    allcategories: []
+    allcategories: [],
+    latestpost: []
   },
   getters: {
     getCategory: function getCategory(state) {
@@ -93343,6 +93376,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     allcategories: function allcategories(state) {
       return state.allcategories;
+    },
+    latestpost: function latestpost(state) {
+      return state.latestpost;
     }
   },
   actions: {
@@ -93358,7 +93394,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     getblogPost: function getblogPost(context) {
       axios.get('/blogpost').then(function (response) {
-        context.commit('getblogpost', response.data.blogpost);
+        context.commit('getblogpost', response.data.posts);
       });
     },
     getPostById: function getPostById(context, payload) {
@@ -93369,6 +93405,23 @@ __webpack_require__.r(__webpack_exports__);
     allcategories: function allcategories(context) {
       axios.get('/categories').then(function (response) {
         context.commit('allcategories', response.data.categories);
+      });
+    },
+    getPostByCatId: function getPostByCatId(context, payload) {
+      axios.get('/categorypost/' + payload).then(function (response) {
+        console.log(response.data.posts);
+        context.commit('getPostByCatId', response.data.posts);
+      });
+    },
+    latestPost: function latestPost(context) {
+      axios.get('/latestpost').then(function (response) {
+        // console.log(response.data)
+        context.commit('latestpost', response.data.posts);
+      });
+    },
+    SearchPost: function SearchPost(context, payload) {
+      axios.get('/search?s=' + payload).then(function (response) {
+        context.commit('getSearchPost', response.data.posts);
       });
     }
   },
@@ -93385,8 +93438,17 @@ __webpack_require__.r(__webpack_exports__);
     singlepost: function singlepost(state, payload) {
       return state.singlepost = payload;
     },
-    allcategories: function allcategories(state, data) {
-      return state.allcategories = data;
+    allcategories: function allcategories(state, payload) {
+      return state.allcategories = payload;
+    },
+    getPostByCatId: function getPostByCatId(state, payload) {
+      state.blogpost = payload;
+    },
+    getSearchPost: function getSearchPost(state, payload) {
+      state.blogpost = payload;
+    },
+    latestpost: function latestpost(state, payload) {
+      state.latestpost = payload;
     }
   }
 });
