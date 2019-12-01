@@ -60,7 +60,7 @@ import {routes} from './routes';
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 Vue.component('admin-main', require('./components/admin/AdminMaster.vue').default);
 Vue.component('home', require('./components/admin/AdminHomeComponent.vue').default);
-// Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('home-main', require('./components/public/PublicMaster.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

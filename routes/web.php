@@ -12,7 +12,7 @@
  */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('public/index');
 });
 
 Auth::routes();
@@ -37,3 +37,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('post/{id}', 'PostController@edit_post');
     Route::post('update/{id}', 'PostController@update_post');
 });
+
+//blogpost
+Route::get('blogpost','BlogController@get_all_blog_post');
+Route::get('categories','BlogController@get_all_category');
+Route::get('singlepost/{id}','BlogController@getpost_by_id');

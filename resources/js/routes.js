@@ -4,9 +4,9 @@ import AddCategory from './components/admin/category/New.vue'
 import EditCategory from './components/admin/category/Edit.vue'
 
 // // FrontEnd Component
-// import PublicHome from './components/public/PublicHome.vue'
-// import BlogPost from './components/public/blog/BlogPost.vue'
-// import SinglePost from './components/public/blog/SingleBlog.vue'
+import PublicHome from './components/public/PublicHome.vue'
+import BlogPost from './components/public/blog/BlogPost.vue'
+import SinglePost from './components/public/blog/SingleBlog.vue'
 
 // // Post
 import PostList from './components/admin/post/List.vue'
@@ -43,23 +43,23 @@ export const routes = [
         component:EditPost
     },
 
-    // // Frontend Route
-    // {
-    //     path:'/',
-    //     component:PublicHome
-    // },
-    // {
-    //     path:'/blog',
-    //     component:BlogPost
-    // },
-    // {
-    //     path:'/blog/:id',
-    //     component:SinglePost
-    // },
-    // {
-    //     path:'/categories/:id',
-    //     component:BlogPost
-    // },
+    // Frontend Route
+    {
+        path:'/',
+        component:PublicHome
+    },
+    {
+        path:'/blog',
+        component:BlogPost
+    },
+    {
+        path:'/blog/:id',
+        component:SinglePost
+    },
+    {
+        path:'/categories/:id',
+        component:BlogPost
+    },
 
 ];
 
