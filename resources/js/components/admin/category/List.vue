@@ -17,6 +17,16 @@
               <table id="example2" class="table table-bordered table-hover">
                 <thead>
                   <tr>
+                    <th>
+                      <select name id v-model="select" @change="deleteSelected">
+                        <option value>Select</option>
+                        <option value>Delete all</option>
+                      </select>
+                      <br />
+                      <input type="checkbox" @click.prevent="selectAll" v-model="all_select" />
+                      <span v-if="all_select==false">Check All</span>
+                      <span v-else>Uncheck All</span>
+                    </th>
                     <th>SN</th>
                     <th>Category Name</th>
                     <th>Created at</th>
@@ -25,11 +35,14 @@
                 </thead>
                 <tbody>
                   <tr v-for="(category,index) in getallCategory" :key="category.id">
+                    <td>
+                      <input type="checkbox" v-model="categoryItem" :value="category.id" />
+                    </td>
                     <td>{{index+1}}</td>
                     <td>{{category.cat_name}}</td>
                     <td>{{category.created_at | timeformat}}</td>
                     <td>
-                    <router-link :to="`/edit-category/${category.id}`">Edit</router-link>
+                      <router-link :to="`/edit-category/${category.id}`">Edit</router-link>
                       <a href @click.prevent="deleteCategory(category.id)">Delete</a>
                     </td>
                   </tr>
@@ -71,9 +84,33 @@ export default {
           Toast.fire({
             icon: "success",
             title: "Category Deleted successfully"
-          })
+          });
         })
-        .catch(() => {})
+        .catch(() => {});
+    },
+    deleteSelected() {
+      axios
+        .get("/deletecategory/" + this.categoryItem)
+        .then(response => {
+          this.categoryItem = [];
+          this.$store.dispatch("allCategory");
+          Toast.fire({
+            icon: "success",
+            title: "Category Deleted successfully"
+          });
+        })
+        .catch(() => {});
+    },
+    selectAll() {
+      if (this.all_select == false) {
+        this.all_select = true;
+        for (var category in this.getallCategory) {
+          this.categoryItem.push(this.getallCategory[category].id);
+        }
+      } else {
+        this.all_select = false;
+        this.categoryItem = [];
+      }
     }
   }
 };
